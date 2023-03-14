@@ -11,9 +11,10 @@ body {
 
 .doodler {
   width: 60px;
-  height: 85px;
-  background-color: brown;
+  height: auto;
+  background-color: transparent;
   position: absolute;
+  object-fit: contain;
 }
 
 .platform {
