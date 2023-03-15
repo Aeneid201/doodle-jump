@@ -10,8 +10,8 @@ let doodlerLeftSpace = 0;
 let timerLeft, timerRight, timerUp, timerDown;
 let doodler;
 let isGameOver = false;
-let movingRight = false;
-let movingLeft = false;
+let isGoingRight = false;
+let isGoingLeft = false;
 
 // Create platforms
 function createPlatforms() {
@@ -70,12 +70,20 @@ function createDoodler() {
 function control(e) {
   let key = e.key;
   if (key === "ArrowLeft") {
+    if (isGoingLeft) return;
     clearInterval(timerRight);
-    timerLeft = setInterval(moveLeft, 30);
+    timerLeft = setInterval(moveLeft, 20);
+    isGoingRight = false;
+    isGoingLeft = true;
   } else if (key === "ArrowRight") {
+    if (isGoingRight) return;
     clearInterval(timerLeft);
-    timerRight = setInterval(moveRight, 30);
+    timerRight = setInterval(moveRight, 20);
+    isGoingLeft = false;
+    isGoingRight = true;
   } else if (key === "ArrowUp") {
+    isGoingLeft = false;
+    isGoingRight = false;
     clearInterval(timerRight);
     clearInterval(timerLeft);
   }
@@ -87,18 +95,16 @@ document.body.addEventListener("keyup", control);
 
 // move functions
 function moveLeft() {
-  doodlerLeftSpace -= 4;
-  doodler.style.left = doodlerLeftSpace + "px";
-  if (doodlerLeftSpace <= 0) {
-    clearInterval(timerLeft);
+  if (doodlerLeftSpace > 0) {
+    doodlerLeftSpace -= 4;
+    doodler.style.left = doodlerLeftSpace + "px";
   }
 }
 
 function moveRight() {
-  doodlerLeftSpace += 4;
-  doodler.style.left = doodlerLeftSpace + "px";
-  if (doodlerLeftSpace >= 315) {
-    clearInterval(timerRight);
+  if (doodlerLeftSpace < 340) {
+    doodlerLeftSpace += 4;
+    doodler.style.left = doodlerLeftSpace + "px";
   }
 }
 
@@ -106,7 +112,7 @@ function moveRight() {
 function jump() {
   clearInterval(timerDown);
   timerUp = setInterval(function () {
-    if (doodlerBottomSpace <= 400) {
+    if (doodlerBottomSpace <= 350) {
       doodlerBottomSpace += 4;
       doodler.style.bottom = doodlerBottomSpace + "px";
     } else {
